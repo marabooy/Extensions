@@ -46,10 +46,7 @@ steps:
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
 
-- task: VSTest@2
+- task: DotNetCoreCLI@2
   inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-    runInParallel: true
-    codeCoverageEnabled: true
-    searchFolder:  '$(System.DefaultWorkingDirectory)'
+    command: test
+    projects: '**/*Tests/*.csproj'
