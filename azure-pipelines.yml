@@ -105,12 +105,6 @@ stages:
       runOnce:
         deploy:
           steps:
-          # If you have MSCA: https://aka.ms/mscadocs
-          - task: ms-codeanalysis.vss-microsoft-security-code-analysis-devops.build-task-antimalware.AntiMalware@3
-            displayName: AntiMalware Scan
-            inputs:
-              EnableServices: true
-              FileDirPath: $(Pipeline.Workspace)\BuildPackages
 
           - task: DotNetCoreCLI@2
             inputs:
