@@ -21,9 +21,9 @@ variables:
 stages: 
 - stage: Build
 
- jobs:
-  - job: Build
-    steps:
+  jobs:
+    - job: Build
+      steps:
       - task: NuGetToolInstaller@1
         displayName: 'Use NuGet >=5.2.0'
         inputs:
@@ -58,11 +58,29 @@ stages:
       - task: DotNetCoreCLI@2
         inputs:
           command: pack
-          packagesToPack: src/AClassLibrary/AClassLibrary.csproj
+          packagesToPack: sln/Microsoft.OData.Extensions.Client/Microsoft.OData.Extensions.Client.csproj
           configuration: $(BuildConfiguration)
           packDirectory: $(Build.ArtifactStagingDirectory)\Packages    
           verbosityPack: Minimal
-        displayName: Build Package
+        displayName: Packing Client 
+      
+      - task: DotNetCoreCLI@2
+        inputs:
+          command: pack
+          packagesToPack: sln/Microsoft.OData.Extensions.Client.Abstractions/Microsoft.OData.Extensions.Client.Abstractions.csproj
+          configuration: $(BuildConfiguration)
+          packDirectory: $(Build.ArtifactStagingDirectory)\Packages    
+          verbosityPack: Minimal
+        displayName: Packing Client Abstractions
+      
+      - task: DotNetCoreCLI@2
+        inputs:
+          command: pack
+          packagesToPack: sln/Microsoft.OData.Extensions.Migrations/Microsoft.OData.Extensions.Migrations.csproj
+          configuration: $(BuildConfiguration)
+          packDirectory: $(Build.ArtifactStagingDirectory)\Packages    
+          verbosityPack: Minimal
+        displayName: Packing  Migrations
 
       - publish: $(Build.ArtifactStagingDirectory)\Packages   
         displayName: Publish Build Artifacts  
@@ -72,7 +90,7 @@ stages:
         displayName: Publish Signing Scripts
         artifact: config
 
-
+        
 - stage: CodeSign
   condition: and(succeeded('Build'), not(eq(variables['build.reason'], 'PullRequest')))
   jobs:
